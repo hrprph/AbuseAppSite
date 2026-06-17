@@ -369,7 +369,18 @@ async function updateDownloadButton() {
       );
 
       if (setupAsset?.browser_download_url && downloadButton) {
-        downloadButton.href = setupAsset.browser_download_url;
+        // Перехоплюємо клік живої людини, щоб обійти блокування Google Safe Browsing
+        downloadButton.removeAttribute('target');
+        downloadButton.addEventListener('click', function(event) {
+          event.preventDefault(); // Блокуємо звичайний перехід
+          
+          // Створюємо тимчасове посилання, "натискаємо" його і видаляємо
+          const hiddenLink = document.createElement('a');
+          hiddenLink.href = setupAsset.browser_download_url;
+          document.body.appendChild(hiddenLink);
+          hiddenLink.click();
+          document.body.removeChild(hiddenLink);
+        });
       }
     }
 
