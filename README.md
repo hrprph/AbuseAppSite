@@ -16,7 +16,7 @@ To learn more, view screenshots, and download the latest version, please visit o
 
 ## Useful Links
 * 🌐 **Website:** [abuseapp.qzz.io](https://abuseapp.qzz.io)
-* 📥 **Download Latest Release:** [GitHub Releases](https://github.com/jenyok3/AbuseAppUpdates/releases/latest)
+* 📥 **Download Latest Release:** [GitHub Releases](https://github.com/hrprph/AbuseAppUpdates/releases/latest)
 * 💬 **Telegram Communities:**
   * EN: [AbuseApp](https://t.me/AbuseApp)
   * UA: [AbuseApp](https://t.me/abuse_app)

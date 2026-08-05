@@ -348,7 +348,7 @@ async function updateDownloadButton() {
   const downloadCount = document.getElementById('downloadCount');
 
   try {
-    const response = await fetch('https://api.github.com/repos/jenyok3/AbuseAppUpdates/releases');
+    const response = await fetch('https://api.github.com/repos/hrprph/AbuseAppUpdates/releases');
     if (!response.ok) return;
 
     const allReleases = await response.json();
