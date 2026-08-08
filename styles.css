@@ -377,13 +377,18 @@ img {
   position: relative;
   width: 100%;
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Ховаємо блок, "обрізаючи" його на 100% знизу */
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(15px);
+  /* Додаємо анімацію розкриття (clip-path) тривалістю 1.2 секунди */
+  transition: opacity 0.4s ease, clip-path 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s ease;
 }
 
 /* Клас активується послідовно через JS */
 .roadmap-item.visible {
   opacity: 1;
+  /* Розкриваємо маску з запасом (-50%), щоб не обрізалася тінь від картинки при наведенні */
+  clip-path: inset(-50% -50% -50% -50%);
   transform: translateY(0);
 }
 

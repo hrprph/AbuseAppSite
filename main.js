@@ -83,19 +83,21 @@ function drawRoadmapTimeline() {
   const path = document.querySelector('.timeline-path');
   const footerLine = document.querySelector('.footer-line');
 
-  if (!section || !container || items.length < 3 || !timeline || !path) return;
+  if (!section || !container || items.length < 4 || !timeline || !path) return;
 
   const img1 = items[0].querySelector('.roadmap-image');
   const img2 = items[1].querySelector('.roadmap-image');
   const img3 = items[2].querySelector('.roadmap-image');
+  const img4 = items[3].querySelector('.roadmap-image');
 
-  if (!img1 || !img2 || !img3) return;
+  if (!img1 || !img2 || !img3 || !img4) return;
 
   const sectionRect = section.getBoundingClientRect();
 
   const rect1 = img1.getBoundingClientRect();
   const rect2 = img2.getBoundingClientRect();
   const rect3 = img3.getBoundingClientRect();
+  const rect4 = img4.getBoundingClientRect();
 
   const point1 = {
     x: rect1.left + rect1.width / 2 - sectionRect.left,
@@ -112,8 +114,14 @@ function drawRoadmapTimeline() {
     y: rect3.top + rect3.height / 2 - sectionRect.top
   };
 
+  const point4 = {
+    x: rect4.left + rect4.width / 2 - sectionRect.left,
+    y: rect4.top + rect4.height / 2 - sectionRect.top
+  };
+
   const midY1 = (point1.y + point2.y) / 2;
   const midY2 = (point2.y + point3.y) / 2;
+  const midY3 = (point3.y + point4.y) / 2;
 
   let pathData = `
     M ${point1.x} ${point1.y}
@@ -121,6 +129,8 @@ function drawRoadmapTimeline() {
     Q ${point2.x} ${midY1}, ${point2.x} ${point2.y}
     Q ${point2.x} ${midY2}, ${(point2.x + point3.x) / 2} ${midY2}
     Q ${point3.x} ${midY2}, ${point3.x} ${point3.y}
+    Q ${point3.x} ${midY3}, ${(point3.x + point4.x) / 2} ${midY3}
+    Q ${point4.x} ${midY3}, ${point4.x} ${point4.y}
   `;
 
   if (footerLine) {
@@ -130,12 +140,12 @@ function drawRoadmapTimeline() {
       y: footerRect.top - 15 - sectionRect.top
     };
 
-    const verticalDist = footerPoint.y - point3.y;
-    const midY3 = point3.y + verticalDist * 0.65;
+    const verticalDist = footerPoint.y - point4.y;
+    const midY4 = point4.y + verticalDist * 0.65;
 
     pathData += `
-      Q ${point3.x} ${midY3}, ${(point3.x + footerPoint.x) / 2} ${midY3}
-      Q ${footerPoint.x} ${midY3}, ${footerPoint.x} ${footerPoint.y}
+      Q ${point4.x} ${midY4}, ${(point4.x + footerPoint.x) / 2} ${midY4}
+      Q ${footerPoint.x} ${midY4}, ${footerPoint.x} ${footerPoint.y}
     `;
   }
 
@@ -170,7 +180,7 @@ function drawRoadmapTimeline() {
   const oldRects = mask.querySelectorAll('rect');
   oldRects.forEach(r => r.remove());
 
-  [rect1, rect2, rect3].forEach(rect => {
+  [rect1, rect2, rect3, rect4].forEach(rect => {
     const maskRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     maskRect.setAttribute('x', rect.left - sectionRect.left);
     maskRect.setAttribute('y', rect.top - sectionRect.top);
@@ -226,8 +236,9 @@ function drawRoadmapTimeline() {
         const inRect1 = currentPoint.x >= rect1.left - sectionRect.left && currentPoint.x <= rect1.right - sectionRect.left && currentPoint.y >= rect1.top - sectionRect.top && currentPoint.y <= rect1.bottom - sectionRect.top;
         const inRect2 = currentPoint.x >= rect2.left - sectionRect.left && currentPoint.x <= rect2.right - sectionRect.left && currentPoint.y >= rect2.top - sectionRect.top && currentPoint.y <= rect2.bottom - sectionRect.top;
         const inRect3 = currentPoint.x >= rect3.left - sectionRect.left && currentPoint.x <= rect3.right - sectionRect.left && currentPoint.y >= rect3.top - sectionRect.top && currentPoint.y <= rect3.bottom - sectionRect.top;
+        const inRect4 = currentPoint.x >= rect4.left - sectionRect.left && currentPoint.x <= rect4.right - sectionRect.left && currentPoint.y >= rect4.top - sectionRect.top && currentPoint.y <= rect4.bottom - sectionRect.top;
 
-        if (animationProgress >= totalLength || inRect1 || inRect2 || inRect3) {
+        if (animationProgress >= totalLength || inRect1 || inRect2 || inRect3 || inRect4) {
           glowDot.style.opacity = 0;
         } else {
           glowDot.style.opacity = 1;
@@ -236,6 +247,7 @@ function drawRoadmapTimeline() {
         if (currentPoint.y >= point1.y - 20) items[0].classList.add('visible');
         if (currentPoint.y >= point2.y - 20) items[1].classList.add('visible');
         if (currentPoint.y >= point3.y - 20) items[2].classList.add('visible');
+        if (currentPoint.y >= point4.y - 20) items[3].classList.add('visible');
       } catch (e) {}
     }
 
@@ -409,9 +421,11 @@ const translations = {
     roadmap1Title: 'Панель керування',
     roadmap1Desc: 'Масовий запуск, Календар>Список планів, Останні дії, Статистика акаунтів, Список завдань',
     roadmap2Title: 'Список акаунтів',
-    roadmap2Desc: 'Додати хештег, нотатки, назву, відкрити/закрити акаунт',
+    roadmap2Desc: 'Додати проксі, хештег, нотатки, ім\'я, відкрити/закрити акаунт',
     roadmap3Title: 'Масовий запуск',
     roadmap3Desc: 'Додати проєкт/видалити, відкрити одночасно всі, режим "Mix", прогрес бар і т.д..',
+    roadmap4Title: 'Модулі',
+    roadmap4Desc: 'Автооновлювані модулі від розробників, в яких реалізовано різного виду автоматизації для ваших проєктів',
     footerText: 'Built for fun',
     telegramLink: 'https://t.me/abuse_app'
   },
@@ -421,9 +435,11 @@ const translations = {
     roadmap1Desc: 'Mass launch, Calendar>Plans list, Recent actions, Account statistics, Task list',
     roadmap2Title: 'Accounts List',
     scrollSnapStop: 'always',
-    roadmap2Desc: 'Add hashtag, notes, name, open/close account',
+    roadmap2Desc: 'Add proxy, hashtag, notes, name, open/close account',
     roadmap3Title: 'Mass Launch',
     roadmap3Desc: 'Add/delete project, open all at once, "Mix" mode, progress bar, etc..',
+    roadmap4Title: 'Modules',
+    roadmap4Desc: 'Auto-updating modules from developers with various types of automation for your projects',
     footerText: 'Built for fun',
     telegramLink: 'https://t.me/AbuseApp'
   },
@@ -432,9 +448,11 @@ const translations = {
     roadmap1Title: 'Панель управления',
     roadmap1Desc: 'Массовый запуск, Календарь>Список планов, Последние действия, Статистика аккаунтов, Список задач',
     roadmap2Title: 'Список аккаунтов',
-    roadmap2Desc: 'Добавить хэштег, заметки, название, открыть/закрыть аккаунт',
+    roadmap2Desc: 'Добавить прокси, хэштег, заметки, имя, открыть/закрыть аккаунт',
     roadmap3Title: 'Массовый запуск',
     roadmap3Desc: 'Добавить проект/удалить, открыть все одновременно, режим "Mix", прогресс бар и т.д..',
+    roadmap4Title: 'Модули',
+    roadmap4Desc: 'Автообновляемые модули от разработчиков, в которых реализованы различные виды автоматизации для ваших проектов',
     footerText: 'Built for fun',
     telegramLink: 'https://t.me/AbuseAppRu'
   }
@@ -465,6 +483,12 @@ function applyTranslation(lang) {
     const desc3 = roadmapItems[2].querySelector('p');
     if (title3) title3.textContent = t.roadmap3Title;
     if (desc3) desc3.textContent = t.roadmap3Desc;
+  }
+  if (roadmapItems[3]) {
+    const title4 = roadmapItems[3].querySelector('h2');
+    const desc4 = roadmapItems[3].querySelector('p');
+    if (title4) title4.textContent = t.roadmap4Title;
+    if (desc4) desc4.textContent = t.roadmap4Desc;
   }
 
   const footerText = document.querySelector('.footer-text');
